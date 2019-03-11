@@ -29,10 +29,10 @@
   version "3.3.7"
   resolved "https://codeload.github.com/twbs/bootstrap/tar.gz/0b9c4a4007c44201dce9a6cc1a38407005c26c86"
 
-"@bower_components/bowser@ded/bowser#1.9.4":
-  version "1.9.4"
-  uid "1fb99ced0e8834fd9662604bad7e0f0c3eba2786"
-  resolved "https://codeload.github.com/ded/bowser/tar.gz/1fb99ced0e8834fd9662604bad7e0f0c3eba2786"
+"@bower_components/bowser@ded/bowser#2.1.2":
+  version "2.1.2"
+  uid d57235b4239fca168fe9ebd6c8b95ab5fe8a0b44
+  resolved "https://codeload.github.com/ded/bowser/tar.gz/d57235b4239fca168fe9ebd6c8b95ab5fe8a0b44"
 
 "@bower_components/browser-update@Graffino/Browser-Update#2.0.2":
   version "2.0.2"
