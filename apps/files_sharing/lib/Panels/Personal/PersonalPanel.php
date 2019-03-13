@@ -46,16 +46,29 @@ class PersonalPanel implements ISettings {
 	 * @return TemplateResponse | Template
 	 */
 	public function getPanel() {
+		$tmpl = new Template('files_sharing', 'settings-personal');
+		$showForm = false;
+		$globalAutoAcceptShareEnabled = $this->config->getAppValue(
+			'core',
+			'shareapi_auto_accept_share',
+			'yes'
+		);
 		$autoAcceptShareEnabled = $this->config->getUserValue(
 			$this->userSession->getUser()->getUID(),
 			'files_sharing',
 			'auto_accept_share',
-			'yes'
+			$globalAutoAcceptShareEnabled
 		);
-		$tmpl = new Template('files_sharing', 'settings-personal');
+		if ($globalAutoAcceptShareEnabled === 'yes') {
+			$showForm = true;
+			$tmpl->assign(
+				'userAutoAcceptShareEnabled',
+				$autoAcceptShareEnabled
+			);
+		}
 		$tmpl->assign(
-			'userAutoAcceptShareEnabled',
-			$autoAcceptShareEnabled
+			'showForm',
+			$showForm
 		);
 		return $tmpl;
 	}

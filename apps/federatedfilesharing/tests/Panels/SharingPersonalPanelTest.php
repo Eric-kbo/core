@@ -56,7 +56,20 @@ class SharingPersonalPanelTest extends \Test\TestCase {
 		$this->assertEquals(40, $this->sharingPersonalPanel->getPriority());
 	}
 
-	public function testGetPanel() {
+	public function globalFederatedSharingConfigProvider() {
+		return [
+			[['auto_accept_trusted' => 'yes'], true],
+			[['auto_accept_trusted' => 'no'], false],
+		];
+	}
+
+	/**
+	 * @dataProvider globalFederatedSharingConfigProvider
+	 *
+	 * @param array $globalConfigs
+	 * @param boolean $showForm
+	 */
+	public function testGetPanel($globalConfigs, $showForm) {
 		$mockUser = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -67,8 +80,16 @@ class SharingPersonalPanelTest extends \Test\TestCase {
 		$this->userSession->expects($this->any())
 			->method('getUser')
 			->willReturn($mockUser);
-
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('federatedfilesharing', 'auto_accept_trusted', 'no')
+			->willReturn($globalConfigs['auto_accept_trusted']);
+		
 		$templateHtml = $this->sharingPersonalPanel->getPanel()->fetchPage();
-		$this->assertContains('<form class="section" id="federatedfilesharing_settings">', $templateHtml);
+		if ($showForm) {
+			$this->assertContains('<form class="section" id="federatedfilesharing_settings">', $templateHtml);
+		} else {
+			$this->assertNotContains('<form class="section" id="federatedfilesharing_settings">', $templateHtml);
+		}
 	}
 }

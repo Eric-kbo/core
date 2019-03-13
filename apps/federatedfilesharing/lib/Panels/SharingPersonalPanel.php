@@ -46,16 +46,29 @@ class SharingPersonalPanel implements ISettings {
 	 * @return TemplateResponse | Template
 	 */
 	public function getPanel() {
+		$tmpl = new Template('federatedfilesharing', 'settings-personal-sharing');
+		$showForm = false;
+		$globalAutoAcceptShareEnabled  = $this->config->getAppValue(
+			'federatedfilesharing',
+			'auto_accept_trusted',
+			'no'
+		);
 		$autoAcceptShareEnabled = $this->config->getUserValue(
 			$this->userSession->getUser()->getUID(),
 			'federatedfilesharing',
 			'auto_accept_share_trusted',
-			'yes'
+			$globalAutoAcceptShareEnabled
 		);
-		$tmpl = new Template('federatedfilesharing', 'settings-personal-sharing');
+		if ($globalAutoAcceptShareEnabled === 'yes') {
+			$showForm = true;
+			$tmpl->assign(
+				'userAutoAcceptShareTrustedEnabled',
+				$autoAcceptShareEnabled
+			);
+		}
 		$tmpl->assign(
-			'userAutoAcceptShareTrustedEnabled',
-			$autoAcceptShareEnabled
+			'showForm',
+			$showForm
 		);
 		return $tmpl;
 	}

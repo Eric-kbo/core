@@ -21,16 +21,24 @@
 
 /** @var array $_ */
 /** @var \OCP\IL10N $l */
+
+if (!$_['showForm']) {
+	return;
+}
 script('files_sharing', 'settings-personal');
 ?>
 
 <form class="section" id="files_sharing_settings">
 	<h2 class="app-name"><?php p($l->t('Sharing'));?></h2>
+	<?php if (isset($_['userAutoAcceptShareEnabled'])) {
+	?>
 	<input type="checkbox" name="auto_accept_share" id="userAutoAcceptShareInput" class="checkbox"
 			   value="1" <?php if ($_['userAutoAcceptShareEnabled'] === 'yes') {
-	print_unescaped('checked="checked"');
-} ?> />
+		print_unescaped('checked="checked"');
+	} ?> />
 	<label for="userAutoAcceptShareInput">
-		<?php p($l->t('Automatically accept new incoming local user shares'));?>
+		<?php p($l->t('Automatically accept new incoming local user shares')); ?>
 	</label><br/>
+	<?php
+} ?>
 </form>

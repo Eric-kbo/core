@@ -56,7 +56,20 @@ class PersonalPanelTest extends \Test\TestCase {
 		$this->assertEquals(100, $this->personalPanel->getPriority());
 	}
 
-	public function testGetPanel() {
+	public function globalSharingConfigProvider() {
+		return [
+			[['shareapi_auto_accept_share' => 'yes'], true],
+			[['shareapi_auto_accept_share' => 'no'], false],
+		];
+	}
+
+	/**
+	 * @dataProvider globalSharingConfigProvider
+	 *
+	 * @param array $globalConfigs
+	 * @param boolean $showForm
+	 */
+	public function testGetPanel($globalConfigs, $showForm) {
 		$mockUser = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -67,8 +80,16 @@ class PersonalPanelTest extends \Test\TestCase {
 		$this->userSession->expects($this->any())
 			->method('getUser')
 			->willReturn($mockUser);
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_auto_accept_share', 'yes')
+			->willReturn($globalConfigs['shareapi_auto_accept_share']);
 
 		$templateHtml = $this->personalPanel->getPanel()->fetchPage();
-		$this->assertContains('<form class="section" id="files_sharing_settings">', $templateHtml);
+		if ($showForm) {
+			$this->assertContains('<form class="section" id="files_sharing_settings">', $templateHtml);
+		} else {
+			$this->assertNotContains('<form class="section" id="files_sharing_settings">', $templateHtml);
+		}
 	}
 }
